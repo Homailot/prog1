@@ -11,6 +11,7 @@ using namespace std;
 #include <limits>
 #include <iomanip>
 #include <iostream>
+#include <complex>
 
 template <typename T>
 bool checkInput(T& input) {
@@ -84,8 +85,38 @@ void ex_5() {
 	}
 }
 
+void ex_5_alt() {
+	double a, b, c;
+	complex<double> result1, result2, binome;
+	cout << "Give the values for A, B and C in Ax^2 + Bx + C: " << endl;
+	cout << "A: ";
+	while (!checkInput(a) || a == 0) {
+		cout << "Invalid input for A, try again (A is 0 or is not a number): ";
+	}
+	cout << "B: "; while (!checkInput(b));
+	cout << "C: "; while (!checkInput(c));
+
+	binome = sqrt((complex<double>) pow(b, 2) - 4 * a * c);
+	result1 = (-b + binome) / (2 * a);
+
+	cout << fixed << setprecision(3);
+	if (binome.imag() != 0) {
+		cout << "The solution has 2 complex roots: " << result1.real() << " + " << result1.imag() << "i and " << result1.real() << " - " << result1.imag() << "i" << endl;
+	}
+	else if (binome.real() == 0) {
+		cout << "The solution has 1 real root: " << result1.real() << endl;
+	}
+	else {
+		result2 = (-b - binome) / (2 * a);
+
+		cout << "The solution has 2 real roots: " << result1.real() << " and " << result2.real() << endl;
+	}
+}
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	ex_5_alt();
+
+	return 0;
 }
