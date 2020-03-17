@@ -1,0 +1,27 @@
+﻿  TP01.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:             _Ty=double
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         and
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:             _Ty2=float
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\utility(127,1): warning C4244:         ]
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message : see reference to function template instantiation 'std::pair<const _Kty,_Ty>::pair<const char(&)[2],double,0>(_Other1,_Other2 &&) noexcept(false)' being compiled
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :         with
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :         [
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :             _Kty=std::string,
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :             _Ty=float,
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :             _Other1=const char (&)[2],
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :             _Other2=double
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(72): message :         ]
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message : see reference to function template instantiation 'std::pair<const _Kty,_Ty>::pair<const char(&)[2],double,0>(_Other1,_Other2 &&) noexcept(false)' being compiled
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :         with
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :         [
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :             _Kty=std::string,
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :             _Ty=float,
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :             _Other1=const char (&)[2],
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :             _Other2=double
+C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\TP01\TP01.cpp(65): message :         ]
+  TP01.vcxproj -> C:\Users\Nuno Alves\Documents\FEUP\2º Semestre\PROG\Exercicios\Teste\TP01\Debug\TP01.exe
