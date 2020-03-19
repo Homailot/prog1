@@ -206,10 +206,39 @@ void ex_9() {
 	cout << endl;
 }
 
+void ex_15() {
+	srand(time(NULL));
+	int number1 = rand() % 8 + 2;
+	int number2 = rand() % 8 + 2;
+	int answer, result = number1 * number2;
+	double elapsedTime;
 
-int main()
-{
-	ex_9();
+	time_t time1, time2;
+	cout << "What is " << number1 << " x " << number2 << "? ";
+	time1 = time(NULL);
+	while (!checkInput(answer));
+	time2 = time(NULL);
+	
+	elapsedTime = difftime(time2, time1);
+	if (answer != result) {
+		cout << "Very Bad!";
+	}
+	else if (elapsedTime < 5) {
+		cout << "Good!";
+	}
+	else if (elapsedTime <= 10) {
+		cout << "Satisfactory.";
+	}
+	else {
+		cout << "Insufficient.";
+	}
+	
+	cout << endl;
+}
+
+
+int main() {
+	ex_15();
 
 	return 0;
 }
