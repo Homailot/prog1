@@ -113,10 +113,103 @@ void ex_5_alt() {
 	}
 }
 
+bool isPrime(unsigned long int num) {
+	if (num == 1) return false;
+
+	for (unsigned long int divisor = (unsigned long int)sqrt(num); divisor < num; divisor++) {
+		if (num % divisor == 0) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void ex_7_d() {
+	unsigned long int num;
+	for (num = numeric_limits<unsigned long int>::max(); !isPrime(num); num--);
+
+	cout << num << " is the largest prime number that can be stored in an unsigned long";
+}
+
+int numberOfDigits(int num) {
+	num = (int) fabs(num);
+
+	return (int)log10(num) + 1;
+}
+
+void ex_8() {
+	double lowerLimit, upperLimit, interval;
+	int angleSpace, biggestNumber;
+
+	cout << "Lower Limit: ";
+	while (!checkInput(lowerLimit));
+	cout << "Upper Limit: ";
+	while (!checkInput(upperLimit));
+	cout << "Interval: ";
+	while (!checkInput(interval));
+
+	biggestNumber = max(numberOfDigits((int)lowerLimit), numberOfDigits((int)upperLimit));
+	angleSpace = biggestNumber + 6;
+	cout << angleSpace << endl;
+
+
+	cout << fixed << setw(angleSpace) << left;
+	cout << "ang" << setw(10) << "  sin" << setw(10) << "  cos" << setw(10) << "  tan" << endl;
+
+	for (double angDeg = lowerLimit; angDeg <= upperLimit; angDeg += interval) {
+		double ang = angDeg * M_PI / 180;
+
+		cout << setw(angleSpace) << left << setprecision(3) << angDeg << setprecision(6) << setw(10) << sin(ang) << setw(10) << cos(ang) << setw(10);
+		if (angDeg == 90) {
+			cout << "infinite";
+		}
+		else {
+			cout << tan(ang);
+		}
+
+		cout << endl;
+	}
+}
+
+void ex_9() {
+	unsigned long num, numCopy;
+	int digits, lastDigit, firstDigit;
+	bool isPalindrome = true;
+
+	cout << "Enter an unsigned number: ";
+	while (!checkInput(num));
+	digits = numberOfDigits(num);
+	numCopy = num;
+
+	for (int curDigits = digits; curDigits > 0 ; curDigits-= 2) {
+		lastDigit = numCopy % 10;
+		firstDigit = numCopy / pow(10, curDigits - 1);
+
+		if (lastDigit != firstDigit) {
+			isPalindrome = false;
+			break;
+		}
+
+		numCopy -= firstDigit * pow(10, curDigits - 1);
+		numCopy /= 10;
+	}
+
+	cout << num;
+	if (isPalindrome) {
+		cout << " is a palindrome.";
+	}
+	else {
+		cout << " is not a palindrome.";
+	}
+
+	cout << endl;
+}
+
 
 int main()
 {
-	ex_5_alt();
+	ex_9();
 
 	return 0;
 }

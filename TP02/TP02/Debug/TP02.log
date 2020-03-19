@@ -1,2 +1,4 @@
 ﻿  TP02.cpp
-  TP02.vcxproj -> C:\Users\Nuno Alves\source\PROG\prog1\TP02\Debug\TP02.exe
+D:\Unity Projects\FEUP PROG\prog1\TP02\TP02\TP02.cpp(187,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Unity Projects\FEUP PROG\prog1\TP02\TP02\TP02.cpp(194,49): warning C4244: '-=': conversion from 'double' to 'unsigned long', possible loss of data
+  TP02.vcxproj -> D:\Unity Projects\FEUP PROG\prog1\TP02\Debug\TP02.exe
