@@ -1,3 +1,3 @@
 ﻿  TP03.cpp
-D:\Unity Projects\FEUP PROG\prog1\TP03\TP03\TP03.cpp(57,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Unity Projects\FEUP PROG\prog1\TP03\TP03\TP03.cpp(66,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   TP03.vcxproj -> D:\Unity Projects\FEUP PROG\prog1\TP03\Debug\TP03.exe
