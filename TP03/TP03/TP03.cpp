@@ -12,6 +12,7 @@ using namespace std;
 #include <iomanip>
 #include <iostream>
 #include <complex>
+#include <assert.h> 
 
 template <typename T>
 bool checkInput(T& input, char delimiter = '\n') {
@@ -215,9 +216,74 @@ void showCalendars(int year) {
 	}
 }
 
+// Exercises 1 and 12
+
+float distance(pair<float, float> coord1, pair<float, float> coord2) {
+	return sqrt(pow(coord2.first - coord1.first, 2) + pow(coord2.second - coord1.second, 2));
+}
+
+float area(pair<float, float> vertex1, pair<float, float> vertex2, pair<float, float> vertex3) {
+	// Area of a triangle knowing the coordinates of its vertices
+	pair<float, float> coordinates[3] = { vertex1, vertex2, vertex3 };
+	float perimiter = 0, sideLengths[3], s, area;
+
+	for (int i = 0; i < 3; i++) {
+		int next = (i + 1) % 3;
+		sideLengths[i] = distance(coordinates[i], coordinates[next]);
+		perimiter += sideLengths[i];
+	}
+	s = perimiter / 2.0f;
+
+	area = sqrt(s * (s - sideLengths[0]) * (s - sideLengths[1]) * (s - sideLengths[2]));
+	return area;
+}
+
+float area(float radius) {
+	// Area of a circle knowing its radius
+	return (float)M_PI * radius * radius;
+}
+
+float area(pair<float, float> vertex1, pair<float, float> vertex2) {
+	// Area of a rectangle, knowing two of its opposite vertices
+	pair<float, float> vertex3 = make_pair(vertex1.first, vertex2.second);
+	float side1 = distance(vertex1, vertex3);
+	float side2 = distance(vertex3, vertex2);
+
+	return side1 * side2;
+}
+
+// Exercise 13
+
+int rollDie(int low = 1, int high = 6)
+{
+	assert(high >= low);
+	return (rand() % (high - low + 1)) + low;
+}
+
+// Exercise 14
+
+double integrateTR(double f(double), double a, double b, int n) {
+	double width = (b - a) / n, sum = 0;
+
+	for (int i = 1; i <= n; i++) {
+		sum += width / 2 * (f(a + (i - 1) * width) + f(a + i * width));
+	}
+
+	return sum;
+}
+
+double g(double x) {
+	return x * x;
+}
+
+double h(double x) {
+	return sqrt(4 - x * x);
+}
+
+
 int main()
 {
-	showCalendars(2012);
+	cout << integrateTR(h, -2, 2, 100);
 
 	return 0;
 }
