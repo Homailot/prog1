@@ -170,6 +170,11 @@ string monthToString(int month) {
 }
 
 void showCalendar(int year, int month) {
+	if (month < 1 || month > 12) {
+		cout << "Invalid month" << endl;
+		return;
+	}
+
 	string days[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 	cout << monthToString(month) << "/" << year << endl;
 	
@@ -184,7 +189,7 @@ void showCalendar(int year, int month) {
 	int totalDays = getNumberOfDays(year, month), day = 1;
 	cout << setw((long long)(curWeekDay) * 6) << "";
 
-	while (true) {
+	while (day <= totalDays) {
 		cout << setw(3) << right << day;
 	
 		if (curWeekDay == 6) {
@@ -203,9 +208,16 @@ void showCalendar(int year, int month) {
 	cout << endl;
 }
 
+void showCalendars(int year) {
+	for (int month = 1; month <= 12; month++) {
+		showCalendar(year, month);
+		cout << endl;
+	}
+}
+
 int main()
 {
-	showCalendar(2011, 2);
+	showCalendars(2012);
 
 	return 0;
 }
