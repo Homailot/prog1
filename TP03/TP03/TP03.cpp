@@ -128,8 +128,7 @@ bool isLeapYear(int year) {
 
 int getNumberOfDays(int year, int month) {
 	if (month == 2) {
-		if (isLeapYear(year)) return 29;
-		else return 28;
+		return 28 + isLeapYear(year);
 	}
 	else if ((month < 8 && month % 2 == 0) || (month > 8 && month % 2 != 0)) {
 		return 30;
@@ -206,7 +205,7 @@ void showCalendar(int year, int month) {
 
 int main()
 {
-	showCalendar(2012, 1);
+	showCalendar(2011, 2);
 
 	return 0;
 }
