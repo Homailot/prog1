@@ -227,6 +227,20 @@ void printVector(vector<int>& v) {
 	}
 }
 
+void printVector(vector<vector<int>>& v) {
+	vector<vector<int>>::iterator it2;
+	vector<int>::iterator it;
+
+	for (it2 = v.begin(); it2 != v.end(); it2++) {
+		for (it = (*it2).begin(); it != (*it2).end(); it++) {
+			cout << *it << " ";
+		}
+
+		cout << endl;
+	}
+}
+
+
 void removeDuplicates(vector<int>& v) {
 	vector<int>::iterator it2;
 	size_t it = 0;
@@ -262,6 +276,16 @@ bool isLocalMax(size_t row, size_t column, const int a[][NE]) {
 	return true;
 }
 
+bool isLocalMax(size_t row, size_t column, const vector<vector<int>> a) {
+	for (size_t r = row - 1; r <= row + 1; r++) {
+		for (size_t c = column - 1; c <= column + 1; c++) {
+			if (a[r][c] > a[row][column]) return false;
+		}
+	}
+
+	return true;
+}
+
 void initializeMax(bool a[][NE]) {
 	for (int row = 0; row < NE; row++) {
 		for (int column = 0; column < NE; column++) {
@@ -271,6 +295,14 @@ void initializeMax(bool a[][NE]) {
 }
 
 void setImpossibles(size_t row, size_t column, bool a[][NE]) {
+	for (size_t r = row - 1; r <= row + 1; r++) {
+		for (size_t c = column - 1; c <= column + 1; c++) {
+			a[r][c] = true;
+		}
+	}
+}
+
+void setImpossibles(size_t row, size_t column, vector<vector<bool>>& a) {
 	for (size_t r = row - 1; r <= row + 1; r++) {
 		for (size_t c = column - 1; c <= column + 1; c++) {
 			a[r][c] = true;
@@ -292,8 +324,33 @@ void localMax(const int a[][NE]) {
 	}
 }
 
-void localMax(const vector<vector<int>> a, bool considerBorders = false) {
+void localMax(const vector<vector<int>> aOrig, bool considerBorders = false) {
+	vector<vector<int>> a = aOrig;
 
+	if (considerBorders) {
+		vector<vector<int>>::iterator it;
+		int newSize = a.size() + 2;
+		constexpr int minValue = numeric_limits<int>::min();
+
+		for (it = a.begin(); it != a.end(); it++) {
+			(*it).push_back(minValue);
+			(*it).insert((*it).begin(), minValue);
+		}
+
+		a.push_back(vector<int>(newSize, minValue));
+		a.insert(a.begin(), vector<int>(newSize, minValue));
+	}
+	
+	vector<vector<bool>> impossibleMax(a.size(), vector<bool>(a.size(), false));
+
+	for (int row = 1; row < a.size() - 1; row++) {
+		for (int column = 1; column < a.size() - 1; column++) {
+			if (!impossibleMax[row][column] && isLocalMax(row, column, a)) {
+				cout << "Local Max in Row: " << row << " and Column: " << column << " with the value of: " << a[row][column] << endl;
+				setImpossibles(row, column, impossibleMax);
+			}
+		}
+	}
 }
 
 void testLocalMax() {
@@ -305,12 +362,39 @@ void testLocalMax() {
 		{4, 2, 1, 3, 6}
 	};
 
+	vector<vector<int>> vecMatrix{
+		{7, 3, 4, 1, 3},
+		{2, 9, 6, 2, 1},
+		{1, 3, 5, 1, 4},
+		{6, 5, 2, 7, 5},
+		{4, 2, 1, 3, 6}
+	};
+
 	localMax(matrix);
+	localMax(vecMatrix, true);
+}
+
+// Exercise 11
+
+
+void testQSort() {
+	vector<int> toSort { 1, 2, 1, 03, 30, 2, 12, 30, 412, 123, 4,2, 2, 1,7, 9, 19, 29, 39, 1, 3, 2, 1, 0 };
+
+	qsort(&(toSort[0]), toSort.size(), sizeof(int), [](const void* a, const void* b) {
+		int arg1 = *static_cast<const int*>(a);
+		int arg2 = *static_cast<const int*>(b);
+
+		if (arg1 < arg2) return -1;
+		if (arg1 > arg2) return 1;
+		return 0;
+	});
+
+	printVector(toSort);
 }
 
 int main()
 {
-	testLocalMax();
+	testQSort();
 
 	return 0;
 }
