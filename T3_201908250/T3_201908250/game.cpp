@@ -11,6 +11,64 @@ int collect(int player, Board gameBoard);
 Position sow(Position positionS, Board& gameBoard);
 void capture(int playerOrig, Position positionS, Board& gameBoard);
 
+int getNumberOfNonEmptyHoles(int player, Board gameBoard) {
+	int sum = 0;
+
+	for (int hole = 0; hole < 6; hole++) {
+		if (gameBoard.holes[player][hole] != 0) {
+			sum++;
+		}
+	}
+
+	return sum;
+}
+
+bool isIllegalMove(Position positionS, Board gameBoard) {
+	int player = positionS.player;
+	int position = positionS.hole;
+	int numHoles = getNumberOfNonEmptyHoles(player, gameBoard);
+
+	while (position >= 0 && (gameBoard.holes[player][position] == 2 || gameBoard.holes[player][position] == 3)) {
+		position--;
+		numHoles--;
+	}
+
+	return (numHoles == 0);
+}
+
+bool onlyIllegalMoves(int player, Board gameBoard) {
+	Board boardCopy;
+	Position position;
+
+	for (int hole = 0; hole < 6; hole++) {
+		// Copy the gameBoard to boardCopy
+		for (int row = 0; row < 2; row++) {
+			for (int column = 0; column < 6; column++) {
+				boardCopy.holes[row][column] = gameBoard.holes[row][column];
+			}
+		}
+		// -------------------------------------------
+		if (boardCopy.holes[player][hole] == 0) continue;
+
+		if (boardCopy.holes[player][hole] <= (5 - hole)) {
+			if (getNumberOfNonEmptyHoles(trueMod(player + 1, 2), boardCopy) != 0) return false;
+		}
+
+		if (boardCopy.holes[player][hole] > (5 - hole)) {
+			position.player = player;
+			position.hole = hole;
+
+			position = sow(position, boardCopy);
+
+			if (player != position.player && !isIllegalMove(position, boardCopy)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 int rockPaperScissors() {
 	std::string input;
 	std::map<std::string, int> inputToInt = {
@@ -40,7 +98,7 @@ int rockPaperScissors() {
 
 
 void startMultiGame() {
-	Board gameBoard = initializeBoard();
+	Board gameBoard = testBoard();
 
 	std::stringstream ss;
 	std::string playerName;
@@ -71,8 +129,24 @@ void gameMultiLoop(Board gameBoard) {
 
 	while (true) {
 		position.player = player;
-
 		ss.str(std::string());
+
+		if (getNumberOfNonEmptyHoles(player, gameBoard) == 0) {
+			ss << "Because " << gameBoard.playerNames[player] << " has no seeds, their turn will be skipped.";
+			printMessage(ss.str());
+
+			printMessage("");
+			player = trueMod(player + 1, 2);
+			continue;
+		}
+		else if (onlyIllegalMoves(player, gameBoard)) {
+			ss << "Because " << gameBoard.playerNames[player] << " can't do any legal moves, each player collects their seeds and the match ends.";
+			printMessage(ss.str());
+
+			break;
+		}
+
+
 		ss << gameBoard.playerNames[player] << ", it is your turn.";
 		printMessage(ss.str());
 		
@@ -80,7 +154,15 @@ void gameMultiLoop(Board gameBoard) {
 
 		position = sow(position, gameBoard);
 
-		capture(player, position, gameBoard);
+
+		if (player != position.player) {
+			if (isIllegalMove(position, gameBoard)) {
+				printMessage("You have executed an illegal move and, therefore, cannot capture any seeds.");
+			}
+			else {
+				capture(player, position, gameBoard);
+			}
+		}
 
 		printBoard(gameBoard);
 		printMessage("");
@@ -90,12 +172,27 @@ void gameMultiLoop(Board gameBoard) {
 
 int collect(int player, Board gameBoard) {
 	char input;
+	int conversion;
 
 	printMessage("Which hole will you choose to collect your seeds? ", "");
-	while (!checkInput(input) || std::toupper(input) > 'F' || std::toupper(input) < 'A') {
-		printMessage("Invalid input, please try again.");
-		printMessage("Which hole will you choose to collect your seeds? ", "");
-	}
+	do {
+		while (!checkInput(input) || std::toupper(input) > 'F' || std::toupper(input) < 'A') {
+			printMessage("Invalid input, please try again.");
+			printMessage("Which hole will you choose to collect your seeds? ", "");
+		}
+		conversion = std::toupper(input) - 'A';
+
+		if (gameBoard.holes[player][conversion] == 0) {
+			printMessage("The chosen hole has no seeds, choose another hole: ", "");
+		} else if (gameBoard.holes[player][conversion] <= (5 - conversion)) {
+			if (getNumberOfNonEmptyHoles(trueMod(player + 1, 2), gameBoard) == 0) {
+				printMessage("You have to choose a hole that allows the other player to continue to play, try again: ", "");
+			}
+			else break;
+		}
+		else break;
+	} while (true);
+	
 
 	return std::toupper(input) - 'A';
 }
