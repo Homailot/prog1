@@ -73,8 +73,9 @@ void gameMultiLoop(Board gameBoard) {
 		
 		position = collect(player, gameBoard);
 
+		position = sow(player, position, gameBoard);
 
-
+		printBoard(gameBoard);
 		printMessage("");
 		player = trueMod(player + 1, 2);
 	}
@@ -92,6 +93,21 @@ int collect(int player, Board gameBoard) {
 	return std::toupper(input) - 'A';
 }
 
-int sow(int player, int position, Board& gameBoard) {
 
+int sow(int player, int position, Board& gameBoard) {
+	int seeds;
+
+	for (seeds = gameBoard.holes[player][position], gameBoard.holes[player][position] = 0; seeds > 0; seeds--) {
+		if (position + 1 > 5) {
+			position = 0;
+			player = trueMod(player + 1, 2);
+		}
+		else {
+			position++;
+		}
+
+		gameBoard.holes[player][position] += 1;
+	}
+
+	return position;
 }
