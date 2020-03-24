@@ -23,6 +23,16 @@ int getNumberOfNonEmptyHoles(int player, Board gameBoard) {
 	return sum;
 }
 
+int getNumberOfSeeds(int player, Board gameBoard) {
+	int sum = 0;
+
+	for (int hole = 0; hole < 6; hole++) {
+		sum += gameBoard.holes[player][hole];
+	}
+
+	return sum;
+}
+
 bool isIllegalMove(Position positionS, Board gameBoard) {
 	int player = positionS.player;
 	int position = positionS.hole;
@@ -143,6 +153,8 @@ void gameMultiLoop(Board gameBoard) {
 			ss << "Because " << gameBoard.playerNames[player] << " can't do any legal moves, each player collects their seeds and the match ends.";
 			printMessage(ss.str());
 
+			gameBoard.storage[0] += getNumberOfSeeds(0, gameBoard);
+			gameBoard.storage[1] += getNumberOfSeeds(1, gameBoard);
 			break;
 		}
 
@@ -163,10 +175,25 @@ void gameMultiLoop(Board gameBoard) {
 				capture(player, position, gameBoard);
 			}
 		}
+		if (gameBoard.storage[player] > 24) break;
+		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
 
 		printBoard(gameBoard);
 		printMessage("");
 		player = trueMod(player + 1, 2);
+	}
+
+	ss.str(std::string());
+	if (gameBoard.storage[0] == gameBoard.storage[1]) {
+		printMessage("It's a draw!");
+	}
+	else if (gameBoard.storage[0] > gameBoard.storage[1]) {
+		ss << gameBoard.playerNames[0] << " wins!";
+		printMessage(ss.str());
+	}
+	else {
+		ss << gameBoard.playerNames[1] << " wins!";
+		printMessage(ss.str());
 	}
 }
 
