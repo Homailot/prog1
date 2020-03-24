@@ -394,7 +394,7 @@ void testQSort() {
 
 int main()
 {
-	testQSort();
+	cout << (3 < 2 < 3);
 
 	return 0;
 }
