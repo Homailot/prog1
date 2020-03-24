@@ -1,4 +1,5 @@
 #pragma once
+#include"board.h"
 #include<iostream>
 #include<string>
 
@@ -29,5 +30,6 @@ bool checkInput(T& input, char delimiter = '\n') {
 }
 
 void getString(std::string& string);
+void printBoard(Board gameBoard);
 void printMessage(std::string message, std::string end = "\n");
 std::string stringToUpper(std::string str);

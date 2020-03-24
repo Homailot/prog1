@@ -1,4 +1,4 @@
 #pragma once
 #include "board.h"
 
-void startMultiGame(Board gameBoard);
+void startMultiGame();
