@@ -19,8 +19,8 @@ Board testBoard() {
 	Board newBoard;
 
 	int holes[2][6] = {
-		{0,0,0,0,0,1},
-		{0,0,0,0,0,0},
+		{1,1,1,5,11,10},
+		{0,0,0,0,8,8},
 	};
 
 	for (int row = 0; row < 2; row++) {
@@ -30,6 +30,30 @@ Board testBoard() {
 			newBoard.holes[row][column] = holes[row][column];
 		}
 	}
+	newBoard.storage[0] = 3;
+	newBoard.storage[1] = 0;
+
+	return newBoard;
+}
+
+
+Board testBoard2() {
+	Board newBoard;
+
+	int holes[2][6] = {
+		{0,0,0,0,0,0},
+		{2,1,1,0,3,0},
+	};
+
+	for (int row = 0; row < 2; row++) {
+		newBoard.storage[row] = 0;
+
+		for (int column = 0; column < 6; column++) {
+			newBoard.holes[row][column] = holes[row][column];
+		}
+	}
+	newBoard.storage[0] = 20;
+	newBoard.storage[1] = 19;
 
 	return newBoard;
 }

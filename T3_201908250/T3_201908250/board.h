@@ -9,3 +9,4 @@ typedef struct {
 
 Board initializeBoard();
 Board testBoard();
+Board testBoard2();

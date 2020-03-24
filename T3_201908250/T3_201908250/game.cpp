@@ -70,6 +70,10 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 
 			position = sow(position, boardCopy);
 
+			if (player == position.player && hole > position.hole) {
+				return false;
+			}
+
 			if (player != position.player && !isIllegalMove(position, boardCopy)) {
 				return false;
 			}
@@ -108,7 +112,7 @@ int rockPaperScissors() {
 
 
 void startMultiGame() {
-	Board gameBoard = testBoard();
+	Board gameBoard = testBoard2();
 
 	std::stringstream ss;
 	std::string playerName;
@@ -138,6 +142,7 @@ void gameMultiLoop(Board gameBoard) {
 	Position position;
 
 	while (true) {
+		printBoard(gameBoard);
 		position.player = player;
 		ss.str(std::string());
 
@@ -178,7 +183,6 @@ void gameMultiLoop(Board gameBoard) {
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
 
-		printBoard(gameBoard);
 		printMessage("");
 		player = trueMod(player + 1, 2);
 	}
@@ -226,11 +230,12 @@ int collect(int player, Board gameBoard) {
 
 
 Position sow(Position positionS, Board& gameBoard) {
-	int seeds;
-	int player = positionS.player;
-	int position = positionS.hole;
+	int seeds, player, position;
+	Position originalPosition;
+	originalPosition.player = player = positionS.player;
+	originalPosition.hole = position = positionS.hole;
 
-	for (seeds = gameBoard.holes[player][position], gameBoard.holes[player][position] = 0; seeds > 0; seeds--) {
+	for (seeds = gameBoard.holes[player][position], gameBoard.holes[player][position] = 0; seeds > 0;) {
 		if (position + 1 > 5) {
 			position = 0;
 			player = trueMod(player + 1, 2);
@@ -239,7 +244,10 @@ Position sow(Position positionS, Board& gameBoard) {
 			position++;
 		}
 
-		gameBoard.holes[player][position] += 1;
+		if (player != originalPosition.player || position != originalPosition.hole) {
+			gameBoard.holes[player][position] += 1;
+			seeds--;
+		}
 	}
 
 	positionS.hole = position;
