@@ -2,12 +2,14 @@
 #include "game.h"
 #include "common.h"
 #include "board.h"
+#include "position.h"
 #include <map>
 #include <sstream>
 
 void gameMultiLoop(Board gameBoard);
 int collect(int player, Board gameBoard); 
-int sow(int player, int position, Board& gameBoard);
+Position sow(Position positionS, Board& gameBoard);
+void capture(int playerOrig, Position positionS, Board& gameBoard);
 
 int rockPaperScissors() {
 	std::string input;
@@ -64,16 +66,21 @@ void startMultiGame() {
 
 void gameMultiLoop(Board gameBoard) {
 	std::stringstream ss;
-	int player = 0, seeds = 0, position;
+	int player = 0, seeds = 0;
+	Position position;
 
 	while (true) {
+		position.player = player;
+
 		ss.str(std::string());
 		ss << gameBoard.playerNames[player] << ", it is your turn.";
 		printMessage(ss.str());
 		
-		position = collect(player, gameBoard);
+		position.hole = collect(player, gameBoard);
 
-		position = sow(player, position, gameBoard);
+		position = sow(position, gameBoard);
+
+		capture(player, position, gameBoard);
 
 		printBoard(gameBoard);
 		printMessage("");
@@ -94,8 +101,10 @@ int collect(int player, Board gameBoard) {
 }
 
 
-int sow(int player, int position, Board& gameBoard) {
+Position sow(Position positionS, Board& gameBoard) {
 	int seeds;
+	int player = positionS.player;
+	int position = positionS.hole;
 
 	for (seeds = gameBoard.holes[player][position], gameBoard.holes[player][position] = 0; seeds > 0; seeds--) {
 		if (position + 1 > 5) {
@@ -109,5 +118,19 @@ int sow(int player, int position, Board& gameBoard) {
 		gameBoard.holes[player][position] += 1;
 	}
 
-	return position;
+	positionS.hole = position;
+	positionS.player = player;
+	return positionS;
+}
+
+void capture(int playerOrig, Position positionS, Board& gameBoard) {
+	int player = positionS.player;
+	int position = positionS.hole;
+
+	while (position >= 0 && (gameBoard.holes[player][position] == 2 || gameBoard.holes[player][position] == 3)) {
+		gameBoard.storage[playerOrig] += gameBoard.holes[player][position];
+		gameBoard.holes[player][position] = 0;
+
+		position--;
+	}
 }

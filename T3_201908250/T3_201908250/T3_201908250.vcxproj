@@ -164,6 +164,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="gameIO.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
