@@ -11,6 +11,34 @@ int collect(int player, Board gameBoard);
 Position sow(Position positionS, Board& gameBoard);
 void capture(int playerOrig, Position positionS, Board& gameBoard);
 
+int rockPaperScissors() {
+	std::string input;
+	std::map<std::string, int> inputToInt = {
+		{"ROCK", 0},
+		{"PAPER", 1},
+		{"SCISSORS", 2}
+	};
+
+	printMessage("Rock, Paper, or Scissors? ", "");
+	while (!checkInput(input) || inputToInt.find(stringToUpper(input)) == inputToInt.end()) {
+		printMessage("Invalid input, please try again.");
+		printMessage("Rock, Paper, or Scissors? ", "");
+	}
+
+	int computerChoice = randomInt(2, 0);
+	int humanChoice = inputToInt.at(stringToUpper(input));
+	if (humanChoice == trueMod(computerChoice + 1, 3)) {
+		printMessage("Player wins!");
+		return 0;
+	}
+	else {
+		printMessage("Computer wins.");
+	}
+
+	return 1;
+}
+
+
 int getNumberOfNonEmptyHoles(int player, Board gameBoard) {
 	int sum = 0;
 
@@ -49,6 +77,7 @@ bool isIllegalMove(Position positionS, Board gameBoard) {
 bool onlyIllegalMoves(int player, Board gameBoard) {
 	Board boardCopy;
 	Position position;
+	bool notEmptyOpponentField = getNumberOfSeeds(trueMod(player + 1, 2), gameBoard) != 0;
 
 	for (int hole = 0; hole < 6; hole++) {
 		// Copy the gameBoard to boardCopy
@@ -61,7 +90,7 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 		if (boardCopy.holes[player][hole] == 0) continue;
 
 		if (boardCopy.holes[player][hole] <= (5 - hole)) {
-			if (getNumberOfNonEmptyHoles(trueMod(player + 1, 2), boardCopy) != 0) return false;
+			if (notEmptyOpponentField) return false;
 		}
 
 		if (boardCopy.holes[player][hole] > (5 - hole)) {
@@ -82,34 +111,6 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 
 	return true;
 }
-
-int rockPaperScissors() {
-	std::string input;
-	std::map<std::string, int> inputToInt = {
-		{"ROCK", 0},
-		{"PAPER", 1},
-		{"SCISSORS", 2}
-	};
-
-	printMessage("Rock, Paper, or Scissors? ", "");
-	while (!checkInput(input) || inputToInt.find(stringToUpper(input)) == inputToInt.end()) {
-		printMessage("Invalid input, please try again.");
-		printMessage("Rock, Paper, or Scissors? ", "");
-	}
-
-	int computerChoice = randomInt(2, 0);
-	int humanChoice = inputToInt.at(stringToUpper(input));
-	if (humanChoice == trueMod(computerChoice + 1, 3)) {
-		printMessage("Player wins!");
-		return 0;
-	}
-	else {
-		printMessage("Computer wins.");
-	}
-
-	return 1;
-}
-
 
 void startMultiGame() {
 	Board gameBoard = testBoard2();
@@ -146,7 +147,7 @@ void gameMultiLoop(Board gameBoard) {
 		position.player = player;
 		ss.str(std::string());
 
-		if (getNumberOfNonEmptyHoles(player, gameBoard) == 0) {
+		if (getNumberOfSeeds(player, gameBoard) == 0) {
 			ss << "Because " << gameBoard.playerNames[player] << " has no seeds, their turn will be skipped.";
 			printMessage(ss.str());
 
@@ -168,6 +169,14 @@ void gameMultiLoop(Board gameBoard) {
 		printMessage(ss.str());
 		
 		position.hole = collect(player, gameBoard);
+
+		if (position.hole == -1) {
+			printMessage("The match has ended, each player will now collect their seeds.");
+
+			gameBoard.storage[0] += getNumberOfSeeds(0, gameBoard);
+			gameBoard.storage[1] += getNumberOfSeeds(1, gameBoard);
+			break;
+		}
 
 		position = sow(position, gameBoard);
 
@@ -205,19 +214,35 @@ int collect(int player, Board gameBoard) {
 	char input;
 	int conversion;
 
-	printMessage("Which hole will you choose to collect your seeds? ", "");
 	do {
-		while (!checkInput(input) || std::toupper(input) > 'F' || std::toupper(input) < 'A') {
-			printMessage("Invalid input, please try again.");
-			printMessage("Which hole will you choose to collect your seeds? ", "");
-		}
-		conversion = std::toupper(input) - 'A';
+		printMessage("Which hole will you choose to collect your seeds? ", "");
 
-		if (gameBoard.holes[player][conversion] == 0) {
-			printMessage("The chosen hole has no seeds, choose another hole: ", "");
+		if (!checkInputOrSTOP(input)) {
+			printMessage("Invalid input, please try again.");
+			
+			continue;
+		}
+
+		if (checkStop(input)) {
+			if (requestStop(player, gameBoard)) {
+				return -1;
+			}
+
+			printMessage("And so the game continues...");
+			continue;
+		}
+
+		input = std::toupper(input);
+		conversion = input - 'A';
+
+		if (input > 'F' || input < 'A') {
+			printMessage("That hole does not exist, please try again.");
+		}
+		else if (gameBoard.holes[player][conversion] == 0) {
+			printMessage("The chosen hole has no seeds, choose another hole.");
 		} else if (gameBoard.holes[player][conversion] <= (5 - conversion)) {
 			if (getNumberOfNonEmptyHoles(trueMod(player + 1, 2), gameBoard) == 0) {
-				printMessage("You have to choose a hole that allows the other player to continue to play, try again: ", "");
+				printMessage("You have to choose a hole that allows the other player to continue to play, try again.");
 			}
 			else break;
 		}
@@ -225,7 +250,7 @@ int collect(int player, Board gameBoard) {
 	} while (true);
 	
 
-	return std::toupper(input) - 'A';
+	return conversion;
 }
 
 
