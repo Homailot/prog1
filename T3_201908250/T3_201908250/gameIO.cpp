@@ -26,17 +26,6 @@ void printMessage(std::string message, std::string end) {
 	std::cout << message << end;
 }
 
-std::string stringToUpper(std::string str) {
-	std::string::iterator it;
-	std::string newCopy = str;
-
-	for (it = newCopy.begin(); it != newCopy.end(); it++) {
-		(*it) = toupper((*it));
-	}
-
-	return newCopy;
-}
-
 bool checkStop(char input) {
 	return std::cin.eof() || std::toupper(input) == 'S';
 }
@@ -69,5 +58,6 @@ void clearScreen() {
 }
 
 void waitForKey() {
+	printMessage("Press any key to continue...", "");
 	std::cin.get();
 }

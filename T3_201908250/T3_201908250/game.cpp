@@ -10,7 +10,7 @@
 void gameMultiLoop(Board gameBoard);
 int collect(int player, Board gameBoard); 
 Position sow(Position positionS, Board& gameBoard);
-void capture(int playerOrig, Position positionS, Board& gameBoard);
+int capture(int playerOrig, Position positionS, Board& gameBoard);
 
 int rockPaperScissors() {
 	std::string input;
@@ -137,6 +137,28 @@ void startMultiGame() {
 	gameMultiLoop(gameBoard);
 }
 
+void endGame(Board gameBoard) {
+	clearScreen();
+	std::stringstream ss;
+
+	printMessage("And the winner is...");
+	waitForKey();
+
+	clearScreen();
+	printMessage("And the winner is...");
+	if (gameBoard.storage[0] == gameBoard.storage[1]) {
+		printMessage("No one! It's a draw!");
+	}
+	else if (gameBoard.storage[0] > gameBoard.storage[1]) {
+		ss << gameBoard.playerNames[0] << "! Congratulations";
+		printMessage(ss.str());
+	}
+	else {
+		ss << gameBoard.playerNames[1] << "! Congratulations";
+		printMessage(ss.str());
+	}
+}
+
 void gameMultiLoop(Board gameBoard) {
 	std::stringstream ss;
 	int player = 0, seeds = 0;
@@ -151,8 +173,8 @@ void gameMultiLoop(Board gameBoard) {
 		if (getNumberOfSeeds(player, gameBoard) == 0) {
 			ss << "Because " << gameBoard.playerNames[player] << " has no seeds, their turn will be skipped.";
 			printMessage(ss.str());
+			waitForKey();
 
-			printMessage("");
 			player = trueMod(player + 1, 2);
 			continue;
 		}
@@ -178,37 +200,43 @@ void gameMultiLoop(Board gameBoard) {
 			gameBoard.storage[1] += getNumberOfSeeds(1, gameBoard);
 			break;
 		}
-
+		printMessage("");
+		printMessage("Sowing...");
 		position = sow(position, gameBoard);
 
-
+		drawBoard(player, gameBoard);
+		waitForKey();
 		if (player != position.player) {
 			if (isIllegalMove(position, gameBoard)) {
 				printMessage("You have executed an illegal move and, therefore, cannot capture any seeds.");
 			}
 			else {
-				capture(player, position, gameBoard);
+				seeds = capture(player, position, gameBoard);
+				if (seeds > 0) {
+					drawBoard(player, gameBoard);
+					ss.str(std::string());
+					ss << "You have captured " << seeds << " seeds!";
+
+					printMessage(ss.str());
+				}
+				else {
+					printMessage("You didn't capture any seeds this round.");
+				}
+				
 			}
+
+			waitForKey();
 		}
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
 
-		waitForKey();
+
 		player = trueMod(player + 1, 2);
 	}
 
-	ss.str(std::string());
-	if (gameBoard.storage[0] == gameBoard.storage[1]) {
-		printMessage("It's a draw!");
-	}
-	else if (gameBoard.storage[0] > gameBoard.storage[1]) {
-		ss << gameBoard.playerNames[0] << " wins!";
-		printMessage(ss.str());
-	}
-	else {
-		ss << gameBoard.playerNames[1] << " wins!";
-		printMessage(ss.str());
-	}
+	printMessage("GAME OVER!");
+	waitForKey();
+	endGame(gameBoard);
 }
 
 int collect(int player, Board gameBoard) {
@@ -281,14 +309,18 @@ Position sow(Position positionS, Board& gameBoard) {
 	return positionS;
 }
 
-void capture(int playerOrig, Position positionS, Board& gameBoard) {
+int capture(int playerOrig, Position positionS, Board& gameBoard) {
 	int player = positionS.player;
 	int position = positionS.hole;
+	int sum = 0;
 
 	while (position >= 0 && (gameBoard.holes[player][position] == 2 || gameBoard.holes[player][position] == 3)) {
+		sum += gameBoard.holes[player][position];
 		gameBoard.storage[playerOrig] += gameBoard.holes[player][position];
 		gameBoard.holes[player][position] = 0;
 
 		position--;
 	}
+
+	return sum;
 }

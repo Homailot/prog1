@@ -57,7 +57,6 @@ bool checkInputOrSTOP(T& input, char delimiter = '\n') {
 void getString(std::string& string);
 void printBoard(Board gameBoard);
 void printMessage(std::string message, std::string end = "\n");
-std::string stringToUpper(std::string str);
 bool checkStop(char input);
 bool requestStop(int player, Board gameBoard);
 void clearScreen();
