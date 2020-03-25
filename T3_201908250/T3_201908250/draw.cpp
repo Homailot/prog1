@@ -41,19 +41,31 @@ const std::vector<std::pair<int, int>> nineSeed{
 
 const std::vector<std::pair<int, int>> graphicsArray[9] = { oneSeed, twoSeed, threeSeed, fourSeed, fiveSeed, sixSeed, sevenSeed, eightSeed, nineSeed };
 
-std::vector<std::string> storeHouse(int numOfSeeds);
+std::vector<std::string> getStorageVector(int numOfSeeds) {
+	std::vector<std::string> storage{
+		"+-------------+",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"|             |",
+		"+-------------+"
+	};
 
+	storage[6][7] = (char)(numOfSeeds / 10) + '0';
+	storage[7][7] = (char)(numOfSeeds % 10) + '0';
 
-void drawBoard(int player, Board gameBoard) {
-	std::vector<std::string>::iterator it;
-	std::vector<std::string> output = storeHouse(12);
-
-	for (it = output.begin(); it != output.end(); it++) {
-		std::cout << (*it) << std::endl;
-	}
+	return storage;
 }
 
-std::vector<std::string> storeHouse(int numOfSeeds) {
+std::vector<std::string> getHouseVector(int numOfSeeds) {
 	int x, y;
 	std::vector<std::pair<int, int>>::iterator it;
 	std::vector<std::string> box{
@@ -65,7 +77,7 @@ std::vector<std::string> storeHouse(int numOfSeeds) {
 		"|             |",
 		"+-------------+"
 	};
-	
+
 	if (numOfSeeds == 0) return box;
 
 	std::vector<std::pair<int, int>> seedPlacement;
@@ -78,7 +90,7 @@ std::vector<std::string> storeHouse(int numOfSeeds) {
 	else {
 		seedPlacement = graphicsArray[numOfSeeds - 1];
 	}
-	 
+
 	for (it = seedPlacement.begin(); it != seedPlacement.end(); it++) {
 		x = (*it).first;
 		y = (*it).second;
@@ -89,20 +101,31 @@ std::vector<std::string> storeHouse(int numOfSeeds) {
 	return box;
 }
 
-//+-------------+    
-//|             | 
-//|             |
-//|      O      |
-//|             |
-//|             |  
-//+-------------+
-//+-------------+    
-//|             | 
-//|             |
-//|   O     O   |
-//|             |
-//|             |  
-//+-------------+
+void drawBoard(int player, Board gameBoard) {
+	std::vector<std::string>::iterator it;
+	std::vector<std::string> output = getStorageVector(9);
+
+	for (it = output.begin(); it != output.end(); it++) {
+		std::cout << (*it) << std::endl;
+	}
+}
+
+// Player2	             a               b              ...
+//+-------------+ +-------------+ +-------------+    
+//|				| |             | |             | 
+//|				| |             | |             |
+//|				| |      O      | |      O      |       ...
+//|				| |             | |             |
+//|				| |             | |             | 
+//|		 0  	| +-------------+ +-------------+
+//|	     9		| +-------------+    
+//|				| |             | 
+//|				| |             |
+//|				| |   O     O   |
+//|				| |             |
+//|				| |             |  
+//+-------------+ +-------------+
+//                       A               B                 Player1
 //+-------------+    
 //|             |  
 //|      O      |
