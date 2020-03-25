@@ -3,6 +3,7 @@
 #include "common.h"
 #include "board.h"
 #include "position.h"
+#include "draw.h"
 #include <map>
 #include <sstream>
 
@@ -89,6 +90,7 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 		// -------------------------------------------
 		if (boardCopy.holes[player][hole] == 0) continue;
 
+		//
 		if (boardCopy.holes[player][hole] <= (5 - hole)) {
 			if (notEmptyOpponentField) return false;
 		}
@@ -102,7 +104,6 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 			if (player == position.player && hole > position.hole) {
 				return false;
 			}
-
 			if (player != position.player && !isIllegalMove(position, boardCopy)) {
 				return false;
 			}
@@ -132,8 +133,7 @@ void startMultiGame() {
 
 		printMessage(ss.str());
 	}
-
-	printMessage("");
+	waitForKey();
 	gameMultiLoop(gameBoard);
 }
 
@@ -143,7 +143,8 @@ void gameMultiLoop(Board gameBoard) {
 	Position position;
 
 	while (true) {
-		printBoard(gameBoard);
+		clearScreen();
+		drawBoard(player, gameBoard);
 		position.player = player;
 		ss.str(std::string());
 
@@ -192,7 +193,7 @@ void gameMultiLoop(Board gameBoard) {
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
 
-		printMessage("");
+		waitForKey();
 		player = trueMod(player + 1, 2);
 	}
 

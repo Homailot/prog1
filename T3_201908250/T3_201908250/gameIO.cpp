@@ -63,3 +63,11 @@ bool requestStop(int player, Board gameBoard) {
 
 	return (toupper(input) == 'Y');
 }
+
+void clearScreen() {
+	std::cout << "\033[2J\033[1;1H";
+}
+
+void waitForKey() {
+	std::cin.get();
+}

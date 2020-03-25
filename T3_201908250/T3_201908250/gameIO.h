@@ -24,6 +24,7 @@ bool checkInput(T& input, char delimiter = '\n') {
 	if (delimiter != '\n') {
 		std::cin.ignore(1);
 	}
+	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 	return true;
 }
@@ -48,6 +49,7 @@ bool checkInputOrSTOP(T& input, char delimiter = '\n') {
 	if (delimiter != '\n') {
 		std::cin.ignore(1);
 	}
+	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 	return true;
 }
@@ -58,3 +60,5 @@ void printMessage(std::string message, std::string end = "\n");
 std::string stringToUpper(std::string str);
 bool checkStop(char input);
 bool requestStop(int player, Board gameBoard);
+void clearScreen();
+void waitForKey();
