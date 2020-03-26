@@ -10,8 +10,8 @@
 
 void gameMultiLoop(Board gameBoard);
 int collect(int player, Board gameBoard); 
-Position sow(Position positionS, Board& gameBoard);
-int capture(int playerOrig, Position positionS, Board& gameBoard);
+Position sow(Position positionS, Board& gameBoard, bool changeBoard = true);
+int capture(int playerOrig, Position positionS, Board& gameBoard, bool changeBoard = true);
 
 int rockPaperScissors() {
 	std::string input;
@@ -292,7 +292,7 @@ int collect(int player, Board gameBoard) {
 }
 
 
-Position sow(Position positionS, Board& gameBoard) {
+Position sow(Position positionS, Board& gameBoard, bool changeBoard) {
 	int seeds, player, position;
 	Position originalPosition;
 	originalPosition.player = player = positionS.player;
@@ -308,7 +308,7 @@ Position sow(Position positionS, Board& gameBoard) {
 		}
 
 		if (player != originalPosition.player || position != originalPosition.hole) {
-			gameBoard.holes[player][position] += 1;
+			if(changeBoard) gameBoard.holes[player][position] += 1;
 			seeds--;
 		}
 	}
@@ -318,15 +318,17 @@ Position sow(Position positionS, Board& gameBoard) {
 	return positionS;
 }
 
-int capture(int playerOrig, Position positionS, Board& gameBoard) {
+int capture(int playerOrig, Position positionS, Board& gameBoard, bool changeBoard) {
 	int player = positionS.player;
 	int position = positionS.hole;
 	int sum = 0;
 
 	while (position >= 0 && (gameBoard.holes[player][position] == 2 || gameBoard.holes[player][position] == 3)) {
 		sum += gameBoard.holes[player][position];
-		gameBoard.storage[playerOrig] += gameBoard.holes[player][position];
-		gameBoard.holes[player][position] = 0;
+		if (changeBoard) {
+			gameBoard.storage[playerOrig] += gameBoard.holes[player][position];
+			gameBoard.holes[player][position] = 0;
+		}
 
 		position--;
 	}
