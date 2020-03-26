@@ -54,6 +54,6 @@ void printBoard(Board gameBoard);
 void printMessage(std::string message, std::string end = "\n");
 void printMessage(std::string message, int bgColor, int fgColor, std::string end = "\n");
 bool checkStop(char input);
-bool requestStop(int player, Board gameBoard);
+bool requestStop(int player, Board gameBoard, bool multiplayer);
 void clearScreen();
 void waitForKey();

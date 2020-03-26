@@ -39,35 +39,38 @@
 #include <limits>
 #include <vector>
 
-double scoreFromHoles(int player, Board gameBoard) {
-	double score = 0;
+double scoreFromHoles(int player, const Board gameBoard) {
+	double score = 0, tempScore;
+	int seeds, captured;
+	Board boardCopy;
 	Position position;
 
 	for (int hole = 0; hole < 6; hole++) {
 		position.hole = hole; position.player = player;
+		boardCopy = copyBoard(gameBoard);
+		seeds = boardCopy.holes[player][hole];
+		if (seeds == 0) continue;
 
-		position = sow(position, gameBoard, false);
+		position = sow(position, boardCopy);
+		tempScore =  0.125 * seeds;
+		if (tempScore > 1.5) tempScore = 1.5;
 
-		if (gameBoard.holes[player][hole] > 12) {
-			if (position.player == player || isIllegalMove(position, gameBoard)) {
-				score += 1;
-				continue;
-			}
-
-			score += (double)capture(player, position, gameBoard, false) * 1.25 + 1;
-		}
+		score += tempScore;
 
 		if (position.player != player) {
-			if (!isIllegalMove(position, gameBoard)) {
-				score += capture(player, position, gameBoard, false) * 1.25;
+			if (!isIllegalMove(position, boardCopy)) {
+				captured = capture(player, position, boardCopy);
+				if (captured + gameBoard.storage[player] > 24) score += 10;
+				else score += (double)captured * 2;
 			}
+
 		}
 	}
 
 	player = trueMod(player + 1, 2);
 
 	for (int opponentHole = 0; opponentHole < 6; opponentHole++) {
-		if (gameBoard.holes[player][opponentHole] == 1 || gameBoard.holes[player][opponentHole] == 2) score += 1.75;
+		if (gameBoard.holes[player][opponentHole] == 1 || gameBoard.holes[player][opponentHole] == 2) score += 1.25;
 		else if (gameBoard.holes[player][opponentHole] == 0) score += 3;
 	}
 
@@ -115,7 +118,7 @@ int chooseHole(int player, const Board gameBoard) {
 		position.player = player;
 
 		position = sow(position, boardCopy);
-		capture(player, position, boardCopy);
+		if(position.player != player) capture(player, position, boardCopy);
 		
 		evalDiff = evaluateBoard(player, boardCopy) - boardEvaluation;
 
@@ -128,5 +131,5 @@ int chooseHole(int player, const Board gameBoard) {
 			possibleChoices.push_back(hole);
 		}
 	}
-	return possibleChoices[randomInt(possibleChoices.size() - 1, 0)];
+	return possibleChoices[randomInt((int)possibleChoices.size() - 1, 0)];
 }

@@ -8,34 +8,48 @@
 #include <map>
 #include <sstream>
 
-void gameMultiLoop(Board gameBoard);
-int collect(int player, Board gameBoard); 
+void gameMultiLoop(Board gameBoard, bool multiplayer = true, int startingPlayer = 0);
+int collect(int player, Board gameBoard, bool multiplayer); 
 Position sow(Position positionS, Board& gameBoard, bool changeBoard);
 int capture(int playerOrig, Position positionS, Board& gameBoard, bool changeBoard);
 
 int rockPaperScissors() {
+	bool tie = true;
+	std::stringstream ss;
 	std::string input;
+	std::string names[3] = { "ROCK", "PAPER","SCISSORS" };
 	std::map<std::string, int> inputToInt = {
 		{"ROCK", 0},
 		{"PAPER", 1},
 		{"SCISSORS", 2}
 	};
 
-	printMessage("Rock, Paper, or Scissors? ", "");
-	while (!checkInput(input) || inputToInt.find(stringToUpper(input)) == inputToInt.end()) {
-		printMessage("Invalid input, please try again.");
-		printMessage("Rock, Paper, or Scissors? ", "");
-	}
+	while (tie) {
+		tie = false;
+		printMessage("Rock, Paper, or Scissors? ", GREEN, BLACK, "");
+		while (!checkInput(input) || inputToInt.find(stringToUpper(input)) == inputToInt.end()) {
+			printMessage("Invalid input, please try again.");
+			printMessage("Rock, Paper, or Scissors? ", "");
+		}
 
-	int computerChoice = randomInt(2, 0);
-	int humanChoice = inputToInt.at(stringToUpper(input));
-	if (humanChoice == trueMod(computerChoice + 1, 3)) {
-		printMessage("Player wins!");
-		return 0;
+		int computerChoice = randomInt(2, 0);
+		int humanChoice = inputToInt.at(stringToUpper(input));
+
+		ss.str(std::string());
+		ss << "Computer chooses " << names[computerChoice] << ".";
+		printMessage(ss.str(), RED, BLACK);
+		if (humanChoice == trueMod(computerChoice + 1, 3)) {
+			printMessage("Player wins!", YELLOW, BLACK);
+			return 0;
+		}
+		else if (humanChoice == computerChoice) {
+			printMessage("TIE.", RED, BLACK);
+			tie = true;
+		}else {
+			printMessage("Computer wins.", RED, BLACK);
+		}
 	}
-	else {
-		printMessage("Computer wins.");
-	}
+	
 
 	return 1;
 }
@@ -108,6 +122,37 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 	return true;
 }
 
+void startSingleGame() {
+	Board gameBoard = initializeBoard();
+
+	std::stringstream ss;
+	std::string playerName;
+	int player;
+
+	ss.str(std::string());
+
+	ss << "Player, what is your name? ";
+	printMessage(ss.str(), GREEN, BLACK, "");
+
+	getString(playerName);
+
+	ss.str(std::string());
+	ss << "Welcome " << playerName << ".";
+
+	printMessage(ss.str());
+	waitForKey();
+	clearScreen();
+
+	printMessage("You will now play a game of Rock, Paper, Scissors with the computer, to determine which of you plays first.");
+	player = rockPaperScissors();
+	waitForKey();
+
+	gameBoard.playerNames[player] = playerName;
+	gameBoard.playerNames[trueMod(player + 1, 2)] = "COM"/*stringWithColor("Computer", RED, BLACK)*/;
+
+	gameMultiLoop(gameBoard, false, player);
+}
+
 void startMultiGame() {
 	Board gameBoard = initializeBoard();
 
@@ -117,8 +162,8 @@ void startMultiGame() {
 	for (int player = 0; player < 2; player++) {
 		ss.str(std::string());
 
-		ss << "Player " << player << ", what is your name? ";
-		printMessage(ss.str(), "");
+		ss << "Player " << player + 1 << ", what is your name? ";
+		printMessage(ss.str(), GREEN, BLACK, "");
 
 		getString(playerName);
 		gameBoard.playerNames[player] = playerName;
@@ -126,13 +171,13 @@ void startMultiGame() {
 		ss.str(std::string());
 		ss << "Welcome " << playerName << ".";
 
-		printMessage(ss.str(), GREEN, BLACK);
+		printMessage(ss.str());
 	}
 	waitForKey();
 	gameMultiLoop(gameBoard);
 }
 
-void endGame(Board gameBoard) {
+void endGame(Board gameBoard, bool multiplayer) {
 	clearScreen();
 	std::stringstream ss;
 
@@ -154,7 +199,7 @@ void endGame(Board gameBoard) {
 	}
 }
 
-void gameMultiLoop(Board gameBoard) {
+void gameMultiLoop(Board gameBoard, bool multiplayer, int startingPlayer) {
 	std::stringstream ss;
 	int player = 0, seeds = 0;
 	Position position;
@@ -166,7 +211,7 @@ void gameMultiLoop(Board gameBoard) {
 		ss.str(std::string());
 
 		if (getNumberOfSeeds(player, gameBoard) == 0) {
-			ss << "Because " << gameBoard.playerNames[player] << " has no seeds, their turn will be skipped.";
+			ss << " Because " << gameBoard.playerNames[player] << " has no seeds, their turn will be skipped.";
 			printMessage(ss.str());
 			waitForKey();
 
@@ -174,7 +219,7 @@ void gameMultiLoop(Board gameBoard) {
 			continue;
 		}
 		else if (onlyIllegalMoves(player, gameBoard)) {
-			ss << "Because " << gameBoard.playerNames[player] << " can't do any legal moves, each player collects their seeds and the match ends.";
+			ss << " Because " << gameBoard.playerNames[player] << " can't do any legal moves, each player collects their seeds and the match ends.";
 			printMessage(ss.str());
 
 			gameBoard.storage[0] += getNumberOfSeeds(0, gameBoard);
@@ -182,75 +227,73 @@ void gameMultiLoop(Board gameBoard) {
 			break;
 		}
 
-		ss << gameBoard.playerNames[player] << ", it is your turn.";
-		printMessage(ss.str());
-
 		printMessage("");
-		ss.str(std::string());
-		ss << "The bot would have chosen: " << chooseHole(player, gameBoard) << std::endl << "You have the advantage of: " << evaluateBoard(player, gameBoard);
+		ss <<" "<< gameBoard.playerNames[player] << ", it is your turn.";
 		printMessage(ss.str());
-		printMessage("");
 		
-		position.hole = collect(player, gameBoard);
+		if (player == startingPlayer || multiplayer == true) {
+			position.hole = collect(player, gameBoard, multiplayer);
+		}
+		else {
+			position.hole = chooseHole(player, gameBoard);
+			ss.str(std::string());
+			ss << " COM chooses hole " << (char)(position.hole + 'a') << ".";
+			printMessage(ss.str());
+			waitForKey();
+		}
 
 		if (position.hole == -1) {
-			printMessage("The match has ended, each player will now collect their seeds.");
+			printMessage(" The match has ended, each player will now collect their seeds.");
 
 			gameBoard.storage[0] += getNumberOfSeeds(0, gameBoard);
 			gameBoard.storage[1] += getNumberOfSeeds(1, gameBoard);
 			break;
 		}
 		printMessage("");
-		printMessage("Sowing...");
+		printMessage(" Sowing...");
 		position = sow(position, gameBoard);
 
 		drawBoard(player, gameBoard);
+		printMessage("");
 		waitForKey();
 
 		printMessage("");
 		if (player != position.player) {
 			if (isIllegalMove(position, gameBoard)) {
-				printMessage("You have executed an illegal move and, therefore, cannot capture any seeds.");
+				printMessage(" You have executed an illegal move and, therefore, cannot capture any seeds.");
+				waitForKey();
 			}
 			else {
 				seeds = capture(player, position, gameBoard);
 				if (seeds > 0) {
 					ss.str(std::string());
-					ss << "You have captured " << seeds << " seeds!";
+					if (player == startingPlayer || multiplayer == true) ss << " You have captured " << seeds << " seeds!";
+					else ss << "COM has captured " << seeds << " seeds.";
 					printMessage(ss.str());
 
 					drawBoard(player, gameBoard);
+					waitForKey();
 				}
-				else {
-					printMessage("You didn't capture any seeds this round.");
-				}
-				
 			}
-			waitForKey();
+			
 		}
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
-		
-		printMessage("");
-		ss.str(std::string());
-		ss << "You have the advantage of: " << evaluateBoard(player, gameBoard);
-		printMessage(ss.str());
-		waitForKey();
 
 		player = trueMod(player + 1, 2);
 	}
 
 	printMessage("GAME OVER!");
 	waitForKey();
-	endGame(gameBoard);
+	endGame(gameBoard, multiplayer);
 }
 
-int collect(int player, Board gameBoard) {
+int collect(int player, Board gameBoard, bool multiplayer) {
 	char input;
 	int conversion;
 
 	do {
-		printMessage("Which hole will you choose to collect your seeds? ", "");
+		printMessage(" Which hole will you choose to collect your seeds? ", "");
 
 		if (!checkInputOrSTOP(input)) {
 			printMessage("Invalid input, please try again.");
@@ -259,7 +302,7 @@ int collect(int player, Board gameBoard) {
 		}
 
 		if (checkStop(input)) {
-			if (requestStop(player, gameBoard)) {
+			if (requestStop(player, gameBoard, multiplayer)) {
 				return -1;
 			}
 

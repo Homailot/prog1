@@ -9,7 +9,7 @@ typedef void (*MenuOption) ();
 // for the nerds, request an end of file to end the game.
 
 void playSingle() {
-	
+	startSingleGame();
 }
 
 void playMulti() {
