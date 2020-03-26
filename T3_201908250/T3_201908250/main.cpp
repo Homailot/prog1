@@ -5,5 +5,5 @@
 int main()
 {
 	srand(time(NULL));
-	playMulti();
+	menu();
 }

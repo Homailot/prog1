@@ -21,8 +21,8 @@ const std::vector<std::pair<int, int>> fourSeed{
 	std::make_pair(4, 4), std::make_pair(10, 4), std::make_pair(4, 2), std::make_pair(10, 2)
 };
 const std::vector<std::pair<int, int>> fiveSeed{
-	std::make_pair(4, 5), std::make_pair(10, 5), std::make_pair(4, 3), std::make_pair(10, 3),
-	std::make_pair(7, 1)
+	std::make_pair(4, 1), std::make_pair(10, 1), std::make_pair(4, 5), std::make_pair(10, 5),
+	std::make_pair(7, 3)
 };
 const std::vector<std::pair<int, int>> sixSeed{
 	std::make_pair(4, 5), std::make_pair(10, 5), std::make_pair(4, 3), std::make_pair(10, 3),
@@ -190,9 +190,9 @@ void drawBoard(int player, Board gameBoard) {
 //|             |  
 //+-------------+
 //+-------------+    
-//|      O      |  
+//|   O     O   |  
 //|             |
-//|   O     O   |
+//|      O      |
 //|             |
 //|   O     O   |  
 //+-------------+
@@ -227,7 +227,7 @@ void drawBoard(int player, Board gameBoard) {
 //+-------------+    
 //|  O   O   O  | 
 //|             |
-//|  O   12  O  |
+//|  O  1 2  O  |
 //|             |
 //|  O   O   O  |  
 //+-------------+

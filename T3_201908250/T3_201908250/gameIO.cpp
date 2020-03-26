@@ -1,6 +1,7 @@
 #include "board.h"
 #include "common.h"
 #include "gameIO.h"
+#include "color.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -24,6 +25,10 @@ void printBoard(Board gameBoard) {
 
 void printMessage(std::string message, std::string end) {
 	std::cout << message << end;
+}
+
+void printMessage(std::string message, int bgColor, int fgColor, std::string end) {
+	std::cout << "\033[" << COLOR[bgColor].first << ";" << COLOR[fgColor].second << "m" << message << "\033[0m" << end;
 }
 
 bool checkStop(char input) {

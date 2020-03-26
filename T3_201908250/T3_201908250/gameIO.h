@@ -1,5 +1,6 @@
 #pragma once
 #include"board.h"
+#include"color.h"
 #include<iostream>
 #include<string>
 
@@ -21,9 +22,6 @@ bool checkInput(T& input, char delimiter = '\n') {
 		return false;
 	}
 
-	if (delimiter != '\n') {
-		std::cin.ignore(1);
-	}
 	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 	return true;
@@ -46,9 +44,6 @@ bool checkInputOrSTOP(T& input, char delimiter = '\n') {
 		return false;
 	}
 
-	if (delimiter != '\n') {
-		std::cin.ignore(1);
-	}
 	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 	return true;
@@ -57,6 +52,7 @@ bool checkInputOrSTOP(T& input, char delimiter = '\n') {
 void getString(std::string& string);
 void printBoard(Board gameBoard);
 void printMessage(std::string message, std::string end = "\n");
+void printMessage(std::string message, int bgColor, int fgColor, std::string end = "\n");
 bool checkStop(char input);
 bool requestStop(int player, Board gameBoard);
 void clearScreen();

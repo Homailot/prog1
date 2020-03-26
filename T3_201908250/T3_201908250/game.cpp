@@ -114,7 +114,7 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 }
 
 void startMultiGame() {
-	Board gameBoard = testBoard2();
+	Board gameBoard = initializeBoard();
 
 	std::stringstream ss;
 	std::string playerName;
@@ -131,7 +131,7 @@ void startMultiGame() {
 		ss.str(std::string());
 		ss << "Welcome " << playerName << ".";
 
-		printMessage(ss.str());
+		printMessage(ss.str(), GREEN, BLACK);
 	}
 	waitForKey();
 	gameMultiLoop(gameBoard);
@@ -206,6 +206,8 @@ void gameMultiLoop(Board gameBoard) {
 
 		drawBoard(player, gameBoard);
 		waitForKey();
+
+		printMessage("");
 		if (player != position.player) {
 			if (isIllegalMove(position, gameBoard)) {
 				printMessage("You have executed an illegal move and, therefore, cannot capture any seeds.");
@@ -213,11 +215,11 @@ void gameMultiLoop(Board gameBoard) {
 			else {
 				seeds = capture(player, position, gameBoard);
 				if (seeds > 0) {
-					drawBoard(player, gameBoard);
 					ss.str(std::string());
 					ss << "You have captured " << seeds << " seeds!";
-
 					printMessage(ss.str());
+
+					drawBoard(player, gameBoard);
 				}
 				else {
 					printMessage("You didn't capture any seeds this round.");

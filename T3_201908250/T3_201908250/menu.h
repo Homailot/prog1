@@ -1,3 +1,2 @@
 #pragma once
-void playMulti();
-void playSingle();
+void menu();
