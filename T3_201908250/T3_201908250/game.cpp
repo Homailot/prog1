@@ -143,7 +143,7 @@ void startSingleGame() {
 	waitForKey();
 	clearScreen();
 
-	printMessage("You will now play a game of Rock, Paper, Scissors with the computer, to determine which of you plays first.");
+	printMessage("You will now play a game of Rock, Paper, Scissors with the computer to determine which of you plays first.");
 	player = rockPaperScissors();
 	waitForKey();
 
