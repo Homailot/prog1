@@ -21,7 +21,8 @@ void rules() {
 }
 
 void exit() {
-
+	printMessage("Thanks for playing!");
+	waitForKey();
 }
 
 void menu() {
@@ -57,5 +58,6 @@ void menu() {
 		printMessage("What do you want to do? ", "");
 	}
 
+	clearScreen();
 	menuOptions[input - 1]();
 }

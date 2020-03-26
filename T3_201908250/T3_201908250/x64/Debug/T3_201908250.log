@@ -1,0 +1,11 @@
+﻿  bot.cpp
+  common.cpp
+  draw.cpp
+  game.cpp
+  gameIO.cpp
+  main.cpp
+  board.cpp
+  menu.cpp
+  Generating Code...
+D:\Unity Projects\FEUP PROG\prog1\T3_201908250\T3_201908250\main.cpp(7,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  T3_201908250.vcxproj -> D:\Unity Projects\FEUP PROG\prog1\T3_201908250\x64\Debug\T3_201908250.exe

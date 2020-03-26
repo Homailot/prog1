@@ -4,6 +4,7 @@
 #include "board.h"
 #include "position.h"
 #include "draw.h"
+#include "bot.h"
 #include <map>
 #include <sstream>
 
@@ -187,8 +188,11 @@ void gameMultiLoop(Board gameBoard) {
 			break;
 		}
 
-
 		ss << gameBoard.playerNames[player] << ", it is your turn.";
+		printMessage(ss.str());
+
+		ss.str(std::string());
+		ss << "Your advantage is: " << evaluateBoard(player, gameBoard);
 		printMessage(ss.str());
 		
 		position.hole = collect(player, gameBoard);
@@ -226,11 +230,14 @@ void gameMultiLoop(Board gameBoard) {
 				}
 				
 			}
-
+			ss.str(std::string());
+			ss << "Your advantage is: " << evaluateBoard(player, gameBoard);
+			printMessage(ss.str());
 			waitForKey();
 		}
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
+		
 
 
 		player = trueMod(player + 1, 2);
