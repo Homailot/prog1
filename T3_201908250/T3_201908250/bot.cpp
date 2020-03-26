@@ -52,12 +52,12 @@ double scoreFromHoles(int player, Board gameBoard) {
 				continue;
 			}
 
-			score += capture(player, position, gameBoard, false) * 0.35 + 1;
+			score += capture(player, position, gameBoard, false) * 0.75 + 1;
 		}
 
 		if (position.player != player) {
 			if (!isIllegalMove(position, gameBoard)) {
-				score += capture(player, position, gameBoard, false) * 0.35;
+				score += capture(player, position, gameBoard, false) * 0.75;
 			}
 		}
 	}

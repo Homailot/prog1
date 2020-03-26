@@ -10,8 +10,8 @@
 
 void gameMultiLoop(Board gameBoard);
 int collect(int player, Board gameBoard); 
-Position sow(Position positionS, Board& gameBoard, bool changeBoard = true);
-int capture(int playerOrig, Position positionS, Board& gameBoard, bool changeBoard = true);
+Position sow(Position positionS, Board& gameBoard, bool changeBoard);
+int capture(int playerOrig, Position positionS, Board& gameBoard, bool changeBoard);
 
 int rockPaperScissors() {
 	std::string input;
