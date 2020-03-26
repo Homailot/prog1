@@ -10,3 +10,4 @@ typedef struct {
 Board initializeBoard();
 Board testBoard();
 Board testBoard2();
+Board copyBoard(Board board);

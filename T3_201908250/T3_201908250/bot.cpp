@@ -36,6 +36,8 @@
 #include "common.h"
 #include "position.h"
 #include "game.h"
+#include <limits>
+#include <vector>
 
 double scoreFromHoles(int player, Board gameBoard) {
 	double score = 0;
@@ -52,12 +54,12 @@ double scoreFromHoles(int player, Board gameBoard) {
 				continue;
 			}
 
-			score += capture(player, position, gameBoard, false) * 0.75 + 1;
+			score += (double)capture(player, position, gameBoard, false) * 1.25 + 1;
 		}
 
 		if (position.player != player) {
 			if (!isIllegalMove(position, gameBoard)) {
-				score += capture(player, position, gameBoard, false) * 0.75;
+				score += capture(player, position, gameBoard, false) * 1.25;
 			}
 		}
 	}
@@ -66,7 +68,7 @@ double scoreFromHoles(int player, Board gameBoard) {
 
 	for (int opponentHole = 0; opponentHole < 6; opponentHole++) {
 		if (gameBoard.holes[player][opponentHole] == 1 || gameBoard.holes[player][opponentHole] == 2) score += 1.75;
-		else if (gameBoard.holes[player][opponentHole] == 0) score += 4;
+		else if (gameBoard.holes[player][opponentHole] == 0) score += 3;
 	}
 
 	return score;
@@ -87,4 +89,44 @@ double evaluateBoard(int player, const Board gameBoard) {
 	}
 
 	return totalScore;
+}
+
+int chooseHole(int player, const Board gameBoard) {
+	Board boardCopy;
+	Position position;
+	double boardEvaluation = evaluateBoard(player, gameBoard);
+	double maxEvalDiff = -std::numeric_limits<double>::max();
+	double evalDiff;
+	std::vector<int> possibleChoices;
+
+	for (int hole = 0; hole < 6; hole++) {
+		boardCopy = copyBoard(gameBoard);
+
+		if (boardCopy.holes[player][hole] == 0) {
+			continue;
+		}
+		else if (boardCopy.holes[player][hole] <= (5 - hole)) {
+			if (getNumberOfSeeds(trueMod(player + 1, 2), boardCopy) == 0) {
+				continue;
+			}
+		}
+
+		position.hole = hole;
+		position.player = player;
+
+		position = sow(position, boardCopy);
+		capture(player, position, boardCopy);
+		
+		evalDiff = evaluateBoard(player, boardCopy) - boardEvaluation;
+
+		if (evalDiff >= maxEvalDiff) {
+			if (evalDiff > maxEvalDiff) {
+				maxEvalDiff = evalDiff;
+				possibleChoices.clear();
+			}
+			
+			possibleChoices.push_back(hole);
+		}
+	}
+	return possibleChoices[randomInt(possibleChoices.size() - 1, 0)];
 }

@@ -82,13 +82,7 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 	bool notEmptyOpponentField = getNumberOfSeeds(trueMod(player + 1, 2), gameBoard) != 0;
 
 	for (int hole = 0; hole < 6; hole++) {
-		// Copy the gameBoard to boardCopy
-		for (int row = 0; row < 2; row++) {
-			for (int column = 0; column < 6; column++) {
-				boardCopy.holes[row][column] = gameBoard.holes[row][column];
-			}
-		}
-		// -------------------------------------------
+		boardCopy = copyBoard(gameBoard);
 		if (boardCopy.holes[player][hole] == 0) continue;
 
 		//
@@ -191,9 +185,11 @@ void gameMultiLoop(Board gameBoard) {
 		ss << gameBoard.playerNames[player] << ", it is your turn.";
 		printMessage(ss.str());
 
+		printMessage("");
 		ss.str(std::string());
-		ss << "Your advantage is: " << evaluateBoard(player, gameBoard);
+		ss << "The bot would have chosen: " << chooseHole(player, gameBoard) << std::endl << "You have the advantage of: " << evaluateBoard(player, gameBoard);
 		printMessage(ss.str());
+		printMessage("");
 		
 		position.hole = collect(player, gameBoard);
 
@@ -230,15 +226,16 @@ void gameMultiLoop(Board gameBoard) {
 				}
 				
 			}
-			ss.str(std::string());
-			ss << "Your advantage is: " << evaluateBoard(player, gameBoard);
-			printMessage(ss.str());
 			waitForKey();
 		}
 		if (gameBoard.storage[player] > 24) break;
 		else if (gameBoard.storage[trueMod(player + 1, 2)] == 24 && gameBoard.storage[player] == 24) break;
 		
-
+		printMessage("");
+		ss.str(std::string());
+		ss << "You have the advantage of: " << evaluateBoard(player, gameBoard);
+		printMessage(ss.str());
+		waitForKey();
 
 		player = trueMod(player + 1, 2);
 	}
@@ -279,7 +276,7 @@ int collect(int player, Board gameBoard) {
 		else if (gameBoard.holes[player][conversion] == 0) {
 			printMessage("The chosen hole has no seeds, choose another hole.");
 		} else if (gameBoard.holes[player][conversion] <= (5 - conversion)) {
-			if (getNumberOfNonEmptyHoles(trueMod(player + 1, 2), gameBoard) == 0) {
+			if (getNumberOfSeeds(trueMod(player + 1, 2), gameBoard) == 0) {
 				printMessage("You have to choose a hole that allows the other player to continue to play, try again.");
 			}
 			else break;

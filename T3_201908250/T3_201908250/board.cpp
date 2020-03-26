@@ -57,3 +57,17 @@ Board testBoard2() {
 
 	return newBoard;
 }
+
+Board copyBoard(Board board) {
+	Board boardCopy;
+
+	for (int row = 0; row < 2; row++) {
+		boardCopy.storage[row] = board.storage[row];
+
+		for (int column = 0; column < 6; column++) {
+			boardCopy.holes[row][column] = board.holes[row][column];
+		}
+	}
+
+	return boardCopy;
+}
