@@ -197,6 +197,8 @@ void endGame(Board gameBoard, bool multiplayer) {
 		ss << gameBoard.playerNames[1] << "! Congratulations";
 		printMessage(ss.str());
 	}
+
+	waitForKey();
 }
 
 void gameMultiLoop(Board gameBoard, bool multiplayer, int startingPlayer) {
