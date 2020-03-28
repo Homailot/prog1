@@ -38,7 +38,6 @@
 #include "game.h"
 #include <limits>
 #include <vector>
-#include <iostream>
 
 double scoreFromHoles(int player, const Board gameBoard) {
 	double score = 0, tempScore;
@@ -58,15 +57,12 @@ double scoreFromHoles(int player, const Board gameBoard) {
 		
 
 		score += tempScore;
-		//std::cout << "seeds score: " << score << " seeds: " << seeds << std::endl;
 
 		if (position.player != player) {
 			if (!isIllegalMove(position, boardCopy)) {
 				captured = capture(player, position, boardCopy);
-				if (captured + gameBoard.storage[player] > 24) score += 5;
-				else score += (double)captured * 1.5;
+				score += (double)captured * 1.5;
 			}
-			//std::cout << "capture: " << score << std::endl;
 		}
 	}
 
@@ -76,7 +72,6 @@ double scoreFromHoles(int player, const Board gameBoard) {
 		if (gameBoard.holes[player][opponentHole] == 1 || gameBoard.holes[player][opponentHole] == 2) score += 0.4375;
 		else if (gameBoard.holes[player][opponentHole] == 0) score += 3;
 	}
-	//std::cout << "holes opp: " << score << std::endl;
 
 	return score;
 }
@@ -88,15 +83,12 @@ double evaluateBoard(int player, const Board gameBoard) {
 	for (int i = 0; i < 2; i++, player = trueMod(player + 1, 2)) {
 		tempScore = 0;
 		tempScore += (double)gameBoard.storage[player] * 2;
-		//std::cout << "storage " << gameBoard.storage[player] << std::endl;
-
-		tempScore += scoreFromHoles(player, gameBoard);
-		//std::cout << "score from this side " << tempScore << std::endl;
+		if (gameBoard.storage[player] > 24) tempScore += 1000;
+		else tempScore += scoreFromHoles(player, gameBoard);
 
 		if (i == 0) totalScore += tempScore;
 		else totalScore -= tempScore;
 	}
-	//std::cout << "TOTAL;;; " << totalScore << std::endl;
 	return totalScore;
 }
 
@@ -119,7 +111,6 @@ int chooseHole(int player, const Board gameBoard) {
 				continue;
 			}
 		}
-		/*std::cout << ":::::::::::TESTING HOLE " << (char)(hole + 'A') << std::endl;*/
 
 		position.hole = hole;
 		position.player = player;

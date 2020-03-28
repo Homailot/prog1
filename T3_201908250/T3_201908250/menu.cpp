@@ -18,7 +18,7 @@ void playMulti() {
 void rules() {
 	printMessage("############################################################################################################################################");
 	printMessage("Oware is a turn based game.");
-	printMessage("There are forty-eight seeds distributed in groups of four trough two rows of six holes.");
+	printMessage("There are forty-eight seeds distributed in groups of four through two rows of six holes.");
 	printMessage("There exist two larger holes on the sides of the board that are used to store the seeds that players capture during the game.");
 	printMessage("#----------- GOAL -----------# ", GREEN, BLACK);
 	printMessage("Each player make moves in turns to try to capture the maximum amout of seeds.");
@@ -46,7 +46,7 @@ void rules() {
 	printMessage("If the player can not make any legal moves (can't allow the other player to continue), the game ends and each player collect the seeds on their row.");
 	printMessage("Sometimes the game enters a cycle, in that case the players may agree to end the game and each player capture the seeds on their side.");
 	printMessage("To declare a cycle or ask to end the game, write the letter 's' in the input field and the deal will start.");
-	printMessage("For the nerds, you can also input an end of file character into the input field.");
+	printMessage("For the nerds, you can also input an end of file character into the input field to do the same thing.");
 	printMessage("");
 	printMessage("From http://www.joansala.com/auale/rules/en/");
 	waitForKey();
