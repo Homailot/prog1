@@ -29,7 +29,6 @@ std::string stringWithColor(std::string str, int fgColor) {
 }
 
 
-
 int randomInt(int high, int low) {
 	return (rand() % (high - low + 1)) + low;
 }

@@ -99,7 +99,6 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 		boardCopy = copyBoard(gameBoard);
 		if (boardCopy.holes[player][hole] == 0) continue;
 
-		//
 		if (boardCopy.holes[player][hole] <= (5 - hole)) {
 			if (notEmptyOpponentField) return false;
 		}
@@ -110,7 +109,7 @@ bool onlyIllegalMoves(int player, Board gameBoard) {
 
 			position = sow(position, boardCopy);
 
-			if (player == position.player && hole > position.hole) {
+			if (player == position.player && notEmptyOpponentField) {
 				return false;
 			}
 			if (player != position.player && !isIllegalMove(position, boardCopy)) {
@@ -190,11 +189,11 @@ void endGame(Board gameBoard, bool multiplayer) {
 		printMessage("No one! It's a draw!");
 	}
 	else if (gameBoard.storage[0] > gameBoard.storage[1]) {
-		ss << gameBoard.playerNames[0] << "! Congratulations";
+		ss << gameBoard.playerNames[0] << "! Congratulations.";
 		printMessage(ss.str());
 	}
 	else {
-		ss << gameBoard.playerNames[1] << "! Congratulations";
+		ss << gameBoard.playerNames[1] << "! Congratulations!";
 		printMessage(ss.str());
 	}
 
