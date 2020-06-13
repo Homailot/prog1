@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <sstream>
+#include <fstream>
+#include <algorithm>
 
 int trueMod(int n, int divisor) {
 	int result = n % divisor;
@@ -192,7 +195,104 @@ void readBet(EuroMillionsBet& emb) {
 	}
 }
 
+// Exercise 10
+
+typedef struct {
+	int x, y;
+} Point;
+
+typedef struct {
+	std::vector<Point> points;
+} Polygon;
+
+void readPolygon(Polygon& p) {
+	Point point;
+
+	std::cout << "Please input the polygon's points (three minimum) either clockwise or counter-clockwise" << std::endl;
+	std::cout << "Input a point: (format x y); CTRL+Z to stop. " << std::endl;
+	std::cin >> point.x >> point.y;
+
+	while (p.points.size() < 3 || !std::cin.eof()) {
+		if (std::cin.eof()) {
+			std::cin.clear();
+
+			std::cout << "Less than 3 points were input" << std::endl;
+		}
+		else {
+			p.points.push_back(point);
+		}
+
+		std::cout << "Input a point: (format x y); CTRL+Z to stop. " << std::endl;
+		std::cin >> point.x >> point.y;
+	}
+}
+
+void showPolygon(const Polygon& p) {
+	for (auto it = p.points.begin(); it != p.points.end(); it++) {
+		std::cout << it->x << " " << it->y << std::endl;
+	}
+}
+
+double getPolygonArea(const Polygon& p) {
+	int sum = 0;
+
+	for (auto it = p.points.begin(); it + 1 != p.points.end(); it++) {
+		sum += (it->x * (it + 1)->y - it->y * (it + 1)->x);
+	}
+	sum += (p.points.end() - 1)->x * p.points.begin()->y - (p.points.end() - 1)->y * p.points.begin()->x;
+
+	double result = static_cast<double>(sum) / 2;
+
+	return abs(result);
+}
+
+// Exercise 11.b
+
+std::vector<std::string> readPersonsFile(std::string name) {
+	std::vector<std::string> persons;
+	std::string str;
+	std::stringstream ss;
+	ss << name << ".txt";
+	std::fstream file(ss.str(), std::ios::in);
+
+	if (!file.is_open()) {
+		std::cout << "Not Found";
+		exit(1);
+	}
+
+	while (std::getline(file, str)) {
+		persons.push_back(str);
+	}
+
+	return persons;
+}
+
+void writePersons(std::string name, const std::vector<std::string> persons) {
+	std::stringstream ss;
+	ss << name << ".txt";
+	std::fstream file(ss.str(), std::ios::out | std::ios::trunc);
+
+	for (auto it = persons.begin(); it != persons.end(); it++) {
+		file << *it << std::endl;
+	}
+}
+
+void testPersons() {
+	std::string name;
+	std::stringstream ss;
+	std::cout << "input the name of the file (without .txt): ";
+	std::cin >> name;
+
+	std::vector<std::string> persons = readPersonsFile(name);
+	std::sort(persons.begin(), persons.end());
+	ss << name << "_sorted";
+	writePersons(ss.str(), persons);
+}
+
+// Exercise 12
+
+
 int main()
 {
-	
+	testPersons();
 }
